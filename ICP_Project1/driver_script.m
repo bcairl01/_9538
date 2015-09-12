@@ -7,12 +7,13 @@ filenames = {...
     '3D_Cat.mat',...
     '3D_Cat_Noise.mat' ...
 };
-NF              = numel(filenames);
 
 MinErrorTol     = 1e-3;
 MaxIterations   = 20;
 StepFactor      = -1;
 
+
+NF              = numel(filenames);
 TR              = cell(1,NF);
 TT              = cell(1,NF);
 
