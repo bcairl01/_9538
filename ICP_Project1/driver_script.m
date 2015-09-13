@@ -1,6 +1,9 @@
 clear;
 clc;
 close all;
+
+
+% Test files
 filenames = {...
     '2D_Line.mat',...
     '2D_Line_Noise.mat',...
@@ -8,6 +11,8 @@ filenames = {...
     '3D_Cat_Noise.mat' ...
 };
 
+
+% ICP function params
 MinErrorTol     = 1e-3;
 MaxIterations   = 20;
 StepFactor      = -1;
