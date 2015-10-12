@@ -44,6 +44,9 @@ end
 % End initialization code - DO NOT EDIT
 
 
+
+
+
 % --- Executes just before model_search is made visible.
 function model_search_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
@@ -60,9 +63,11 @@ guidata(hObject, handles);
 
 % Global Params (default)
 global DescriptorType;      DescriptorType      = 'GD';
+global DescriptorParams;    DescriptorParams    = get_descriptor_params();
 global ModelInputColor;     ModelInputColor     = 'b';
 global ModelSearchColor;    ModelSearchColor    = 'g';
 global ModelDescriptors;    ModelDescriptors    = [];
+global ModelDirectory;      ModelDirectory      = 'models';
 global ModelInput;          ModelInput.E = [];  ModelInput.V = [];
 % UIWAIT makes model_search wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
@@ -92,7 +97,9 @@ function model_name_entry_Callback(hObject, eventdata, handles)
     global ModelDescriptors;
     global DescriptorType;
     
+    % Get string input from box
     mesh_filename   = get(hObject,'String');
+    
     if ismeshfilename(mesh_filename)
         ModelInput = meshread(mesh_filename);
         if  isempty(ModelInput.V)
@@ -131,8 +138,23 @@ function descriptor_menu_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns descriptor_menu contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from descriptor_menu
+    global DescriptorType;
+    global DescriptorParams;
+    
+    
+    % Get string input from box
+    contents        = get(hObject,'String');
+    DescriptorType  = contents{get(hObject,'Value')};
+    
+    % Check to see if db exists
+    if(check_create_descriptor_db())
+    
+        % Get descriptor parameters asscoiated with database
+        DescriptorParams= get_descriptor_params();
+        
+    end
 
-
+    
 % --- Executes during object creation, after setting all properties.
 function descriptor_menu_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to descriptor_menu (see GCBO)
@@ -151,3 +173,62 @@ function search_button_Callback(hObject, eventdata, handles)
 % hObject    handle to search_button (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+    
+    global DescriptorType;
+    global ModelDirectory;
+    global DescriptorParams;
+    
+    check_create_descriptor_db()
+    
+    
+    
+    
+% Helper functions
+% ========================================================================
+
+function dir = get_descriptor_dir()
+    global DescriptorType;
+    dir = sprintf('%s_data',DescriptorType);
+
+    
+function b = has_descriptor_dir()
+    b = ~isempty(dir(get_descriptor_dir()));
+
+
+    
+function p = get_descriptor_params()
+    if has_descriptor_dir()
+        p = dlmread(sprintf('%s/param.conf',get_descriptor_dir()));
+    else
+        vrat= inputdlg('Input the descriptor/vertex ratio.');
+        dmin= inputdlg('Input minimum binning distance.');
+        dmax= inputdlg('Input maximum binning distance.');
+        dres= inputdlg('Input binning resolution.');
+        p   = [str2double(vrat{1}),str2double(dmin{1}),str2double(dmax{1}),str2double(dres{1})];
+    end
+
+
+    
+function b = check_create_descriptor_db()
+    global DescriptorType;
+    global ModelDirectory;
+    global DescriptorParams;
+    
+    b       = false;
+    if  ~has_descriptor_dir()
+        qans= questdlg( sprintf('Descriptor database does not exist for type ''%s''. Would you like to create one?', DescriptorType) );
+        if strcmpi(qans,'YES')
+            output_dir = sprintf('%s_data',DescriptorType);
+            batch_generate_mesh_descriptors(ModelDirectory,output_dir,...
+                DescriptorParams(1),...
+                DescriptorParams(2),...
+                DescriptorParams(3),...
+                DescriptorParams(4),...
+                DescriptorType      ...
+            );
+            b = true;
+        end
+    else
+        b = true;
+    end
+

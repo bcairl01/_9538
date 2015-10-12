@@ -1,6 +1,7 @@
-function [D,IDX] = generate_spatial_descriptors(mesh,N,dmin,dmax,dres,type)
+function [D,IDX] = generate_spatial_descriptors(mesh,percent,dmin,dmax,dres,type)
 
     [G,~,T] = mesh2graph(mesh,2);
+    N       = size(mesh.V,2)*percent;
     IDX     = ceil(linspace(1,size(mesh.V,2),N));
     D       = zeros(ceil((dmax-dmin)/dres),N);
     D_itr   = 0;
@@ -40,6 +41,6 @@ end
 function c = get_path_counts(p)
     c = zeros(1,numel(p));
     for idx = 1:numel(p)
-        c(idx) = numel(p{idx});
+        c(idx) = numel(p{idx}) - 1;
     end
 end
