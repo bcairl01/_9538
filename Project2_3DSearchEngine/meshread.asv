@@ -1,0 +1,37 @@
+function M = meshread(filename)
+    
+    fid     = fopen(filename);
+    M.verts = [];
+    M.edges = [];
+    if fid > 0
+        header      = fgets(fid,3);
+        
+        if strcmpi(header,'OFF')
+            line        = fscanf(fid,'%d');
+            n_verts     = line(1);
+            n_edges     = line(2);
+            
+            if ~line(3)
+            
+                M.verts     = zeros(3,n_verts);
+                M.edges     = zeros(4,n_edges);
+
+                itr         = 0;
+                while itr < n_verts
+                    itr             = itr + 1;
+                    M.verts(:,itr)  = fscanf(fid,'%f',3);
+                end
+
+                itr         = 0;
+                while itr < n_edges
+                    itr             = itr + 1;
+                    M.edges(:,itr)  = fscanf(fid,'%d',4)+;
+                end  
+            end
+        end
+        fclose(fid);
+    else
+       error(['No file : ',filename]); 
+    end
+
+end

@@ -1,0 +1,3 @@
+function meshview(M,varargin)
+    patch('Faces',M.E.','Vertices',M.V.','FaceColor','b',varargin)
+end

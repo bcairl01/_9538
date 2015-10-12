@@ -1,0 +1,27 @@
+function G = mesh2graph(M,p,)
+    G = zeros( size(M.E,2) );
+    a = 
+    for idx = 1:size(M.E,2)
+        a = M.E(1,idx);
+        for jdx = 2:3            
+            b = M.E(jdx,idx);
+            if  G(a,b)<inf
+                continue;
+            else
+                d = norm( M.V(:,a)- M.V(:,b), p);
+                
+                % Min
+                if d < dl(1); dl(1) = d; end
+                
+                % Max
+                if d > dl(2); dl(2) = d; end
+                
+                G(a,b) = d;
+                G(b,a) = d;
+            end
+        end
+    end
+    Z    = G(:)~=0;
+    G(Z) = abs(G(Z)-dl(2))/(dl(2)-dl(1));
+    G    = sparse(G);
+end
