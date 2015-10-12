@@ -1,7 +1,7 @@
 function [D,IDX] = generate_spatial_descriptors(mesh,percent,dmin,dmax,dres,type)
 
     [G,~,T] = mesh2graph(mesh,2);
-    N       = size(mesh.V,2)*percent;
+    N       = ceil(size(mesh.V,2)*percent);
     IDX     = ceil(linspace(1,size(mesh.V,2),N));
     D       = zeros(ceil((dmax-dmin)/dres),N);
     D_itr   = 0;

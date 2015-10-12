@@ -22,7 +22,7 @@ function varargout = model_search(varargin)
 
 % Edit the above text to modify the response to help model_search
 
-% Last Modified by GUIDE v2.5 11-Oct-2015 21:28:12
+% Last Modified by GUIDE v2.5 12-Oct-2015 18:23:23
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -94,8 +94,6 @@ function model_name_entry_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of model_name_entry as a double
     global ModelInputColor;
     global ModelInput;
-    global ModelDescriptors;
-    global DescriptorType;
     
     % Get string input from box
     mesh_filename   = get(hObject,'String');
@@ -107,15 +105,20 @@ function model_name_entry_Callback(hObject, eventdata, handles)
         else
             % Preview the mesh
             cla
+            axes(handles.model_view)
             meshview(ModelInput,'FaceColor',ModelInputColor); 
             
-            % Generate a descriptor matrix (using default params)
-            ModelDescriptors = generate_spatial_descriptors(ModelInput,50,0,500,5,DescriptorType);
+            % Generate corresponding query descriptors
+            recompute_query_descriptors();
         end
     else
         warndlg(sprintf('Invalid mesh filename : %s',mesh_filename));
     end
 
+    
+
+    
+    
 
 % --- Executes during object creation, after setting all properties.
 function model_name_entry_CreateFcn(hObject, eventdata, handles)
@@ -146,6 +149,9 @@ function descriptor_menu_Callback(hObject, eventdata, handles)
     contents        = get(hObject,'String');
     DescriptorType  = contents{get(hObject,'Value')};
     
+    % Recompute active model descriptors
+    recompute_query_descriptors();
+    
     % Check to see if db exists
     if(check_create_descriptor_db())
     
@@ -174,18 +180,31 @@ function search_button_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
     
-    global DescriptorType;
-    global ModelDirectory;
-    global DescriptorParams;
-    
-    check_create_descriptor_db()
+    if  query_is_loaded()
+        matched_model = '...';
+        if(check_create_descriptor_db()) 
+            matched_model = scan_descriptor_db(handles);
+        end
+        set(handles.candidate_name,'String',...
+            sprintf('Closest match : %s',matched_model));
+    else
+        warndlg('No query model set!');
+    end
     
     
     
     
 % Helper functions
 % ========================================================================
+function b = query_is_loaded()
+    global ModelInput;
+    if isempty(ModelInput)
+        b = false;
+    else
+        b = ~isempty(ModelInput.V);
+    end
 
+    
 function dir = get_descriptor_dir()
     global DescriptorType;
     dir = sprintf('%s_data',DescriptorType);
@@ -197,7 +216,7 @@ function b = has_descriptor_dir()
 
     
 function p = get_descriptor_params()
-    if has_descriptor_dir()
+    if  has_descriptor_dir()
         p = dlmread(sprintf('%s/param.conf',get_descriptor_dir()));
     else
         vrat= inputdlg('Input the descriptor/vertex ratio.');
@@ -207,8 +226,28 @@ function p = get_descriptor_params()
         p   = [str2double(vrat{1}),str2double(dmin{1}),str2double(dmax{1}),str2double(dres{1})];
     end
 
+    
+    
+function recompute_query_descriptors()
+    
+    global ModelInput;
+    global ModelDescriptors;
+    global DescriptorType;
+    global DescriptorParams;   
+
+    if query_is_loaded()
+        % Generate a descriptor matrix (using default params)
+        ModelDescriptors = generate_spatial_descriptors(ModelInput,...
+            DescriptorParams(1),...
+            DescriptorParams(2),...
+            DescriptorParams(3),...
+            DescriptorParams(4),...
+            DescriptorType      ...
+        );
+    end
 
     
+
 function b = check_create_descriptor_db()
     global DescriptorType;
     global ModelDirectory;
@@ -232,3 +271,74 @@ function b = check_create_descriptor_db()
         b = true;
     end
 
+    
+    
+    function match_path = scan_descriptor_db(handles)
+        
+        global ModelDescriptors;
+        global ModelSearchColor;
+        global ModelInputColor;
+        global ModelInput;
+        
+        % Get descriptor file names
+        desc_files      = dir(get_descriptor_dir());
+        desc_files(1:2) = []; %. and ..
+        N               = numel(desc_files)-1;
+        grades          = zeros(N,1);
+        model_names     = cell(N,1);
+        descriptors     = cell(N,1);
+        
+        for idx = 1:N
+            
+            % Load database models
+            model_names{idx}    = sprintf('models/%s.off',desc_files(idx).name(4:(end-4)));
+            M                   = meshread(model_names{idx});
+            
+            
+            % Update Name-box of UI
+            update_str = sprintf('[%d/%d] %s',idx,(N-1),model_names{idx});
+            set(handles.candidate_name,'String',update_str);
+            
+            
+            % Plot query vs. db models
+            axes(handles.model_view)
+            cla
+            hold on
+            meshview(M,             'FaceColor',ModelSearchColor);
+            meshview(ModelInput,    'FaceColor',ModelInputColor);
+            hold off
+            pause(1e-3);
+            
+            
+            % Perform matching/grading
+            data                = load(sprintf('%s/%s',get_descriptor_dir(),desc_files(idx).name));
+            descriptors{idx}    = data.D;
+            [~,d]               = knnsearch(descriptors{idx}.',ModelDescriptors.');
+            grades(idx)         = sum(d);
+            
+            
+            % Plot query vs. db histograms
+            axes(handles.hist_view)
+            cla
+            hold on
+            plot(descriptors{idx},  'Color',ModelSearchColor);
+            plot(ModelDescriptors,  'Color',ModelInputColor);
+            axis auto;
+            hold off
+            pause(1e-3);
+               
+        end
+        
+        % Resolve path to optimal model match
+        [~,opt_idx] = min(grades);
+        match_path  = model_names{opt_idx};
+        M_opt       = meshread(match_path);
+        
+        % Display the closest database result
+        axes(handles.model_view); cla
+        meshview(M_opt,             'FaceColor',ModelSearchColor);
+        meshview(ModelInput,        'FaceColor',ModelInputColor);
+        
+        axes(handles.hist_view); cla
+        plot(descriptors{opt_idx},  'Color',ModelSearchColor);
+        plot(ModelDescriptors,      'Color',ModelInputColor);
