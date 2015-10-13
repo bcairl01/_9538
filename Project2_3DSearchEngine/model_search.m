@@ -69,6 +69,7 @@ global ModelSearchColor;    ModelSearchColor    = 'g';
 global ModelDescriptors;    ModelDescriptors    = [];
 global ModelDirectory;      ModelDirectory      = 'models';
 global ModelInput;          ModelInput.E = [];  ModelInput.V = [];
+global Models;              Models              = meshdirread('models');
 
 
 % Clear Match Collumn
@@ -231,6 +232,9 @@ function p = get_descriptor_params()
 
     
     
+        
+
+    
 function recompute_query_descriptors()
     
     global ModelInput;
@@ -283,6 +287,7 @@ function b = check_create_descriptor_db()
         axes(handles.match3); cla; set(handles.match3_name,'String','4th Closest Match');
         axes(handles.match4); cla; set(handles.match4_name,'String','5th Closest Match');
  
+        
     
     
     function scan_descriptor_db(handles)
@@ -291,25 +296,20 @@ function b = check_create_descriptor_db()
         global ModelSearchColor;
         global ModelInputColor;
         global ModelInput;
+        global Models;
         
         % Get descriptor file names
         desc_files      = dir(get_descriptor_dir());
         desc_files(1:2) = []; %. and ..
         N               = numel(desc_files)-1;
         grades          = zeros(N,1);
-        model_names     = cell(N,1);
-        models          = cell(N,1);
         descriptors     = cell(N,1);
         
         for idx = 1:N
-            
-            % Load database models
-            model_names{idx}    = sprintf('models/%s.off',desc_files(idx).name(4:(end-4)));
-            models{idx}         = meshread(model_names{idx});
-            
+                        
             
             % Update Name-box of UI
-            update_str = sprintf('[%d/%d] %s',idx,(N-1),model_names{idx});
+            update_str = sprintf('[%d/%d] %s',idx,N,Models{idx,2});
             set(handles.candidate_name,'String',update_str);
             
             
@@ -317,7 +317,7 @@ function b = check_create_descriptor_db()
             axes(handles.model_view)
             cla
             hold on
-            meshview(models{idx} ,  'FaceColor',ModelSearchColor);
+            meshview(Models{idx,1},  'FaceColor',ModelSearchColor);
             meshview(ModelInput,    'FaceColor',ModelInputColor);
             hold off
             pause(1e-3);
@@ -326,8 +326,7 @@ function b = check_create_descriptor_db()
             % Perform matching/grading
             data                = load(sprintf('%s/%s',get_descriptor_dir(),desc_files(idx).name));
             descriptors{idx}    = data.D;
-            [~,d]               = knnsearch(descriptors{idx}.',ModelDescriptors.');
-            grades(idx)         = sum(d);
+            grades(idx)         = match_descriptors(descriptors{idx},ModelDescriptors);
             
             
             % Plot query vs. db histograms
@@ -346,11 +345,11 @@ function b = check_create_descriptor_db()
         [~,opt_idx] = sort(grades);
         
         % Display the closest database result
-        axes(handles.match0); cla; meshview(models{opt_idx(1)},'FaceColor',ModelSearchColor); set(handles.match0_name,'String',model_names{opt_idx(1)});
-        axes(handles.match1); cla; meshview(models{opt_idx(2)},'FaceColor',ModelSearchColor); set(handles.match1_name,'String',model_names{opt_idx(2)});
-        axes(handles.match2); cla; meshview(models{opt_idx(3)},'FaceColor',ModelSearchColor); set(handles.match2_name,'String',model_names{opt_idx(3)});
-        axes(handles.match3); cla; meshview(models{opt_idx(4)},'FaceColor',ModelSearchColor); set(handles.match3_name,'String',model_names{opt_idx(4)});
-        axes(handles.match4); cla; meshview(models{opt_idx(5)},'FaceColor',ModelSearchColor); set(handles.match4_name,'String',model_names{opt_idx(5)});
+        axes(handles.match0); cla; meshview(Models{opt_idx(1),1},'FaceColor',ModelSearchColor); set(handles.match0_name,'String',Models{opt_idx(1),2});
+        axes(handles.match1); cla; meshview(Models{opt_idx(2),1},'FaceColor',ModelSearchColor); set(handles.match1_name,'String',Models{opt_idx(2),2});
+        axes(handles.match2); cla; meshview(Models{opt_idx(3),1},'FaceColor',ModelSearchColor); set(handles.match2_name,'String',Models{opt_idx(3),2});
+        axes(handles.match3); cla; meshview(Models{opt_idx(4),1},'FaceColor',ModelSearchColor); set(handles.match3_name,'String',Models{opt_idx(4),2});
+        axes(handles.match4); cla; meshview(Models{opt_idx(5),1},'FaceColor',ModelSearchColor); set(handles.match4_name,'String',Models{opt_idx(5),2});
 
         % Repost the model + hist
         axes(handles.model_view); cla

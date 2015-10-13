@@ -6,7 +6,7 @@ function M = meshread(filename)
     if fid > 0
         header      = fgets(fid,3);
         
-        if strcmpi(header,'OFF')
+        if  strcmpi(header,'OFF')
             line        = fscanf(fid,'%d');
             n_verts     = line(1);
             n_edges     = line(2);

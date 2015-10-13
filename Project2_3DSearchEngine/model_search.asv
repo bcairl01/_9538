@@ -69,6 +69,16 @@ global ModelSearchColor;    ModelSearchColor    = 'g';
 global ModelDescriptors;    ModelDescriptors    = [];
 global ModelDirectory;      ModelDirectory      = 'models';
 global ModelInput;          ModelInput.E = [];  ModelInput.V = [];
+global Models;              Models      = {};
+global ModelNames;          ModelNames  = {};
+
+
+% Clear Match Collumn
+clear_matches(handles);
+
+% Load The Model database
+load_models();
+
 % UIWAIT makes model_search wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
@@ -104,8 +114,7 @@ function model_name_entry_Callback(hObject, eventdata, handles)
             warndlg(sprintf('Mesh ''%s'' is empty or file does not exist.',mesh_filename));
         else
             % Preview the mesh
-            cla
-            axes(handles.model_view)
+            axes(handles.model_view); cla
             meshview(ModelInput,'FaceColor',ModelInputColor); 
             
             % Generate corresponding query descriptors
@@ -181,12 +190,11 @@ function search_button_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
     
     if  query_is_loaded()
-        matched_model = '...';
-        if(check_create_descriptor_db()) 
-            matched_model = scan_descriptor_db(handles);
+        if(check_create_descriptor_db())
+            clear_matches(handles);
+            scan_descriptor_db(handles);
         end
-        set(handles.candidate_name,'String',...
-            sprintf('Closest match : %s',matched_model));
+        set(handles.candidate_name,'String','Search complete!');
     else
         warndlg('No query model set!');
     end
@@ -226,7 +234,14 @@ function p = get_descriptor_params()
         p   = [str2double(vrat{1}),str2double(dmin{1}),str2double(dmax{1}),str2double(dres{1})];
     end
 
+
+function load_models()
+ 	global Models;
+    Models = {};
     
+    
+        
+
     
 function recompute_query_descriptors()
     
@@ -273,7 +288,18 @@ function b = check_create_descriptor_db()
 
     
     
-    function match_path = scan_descriptor_db(handles)
+    function clear_matches(handles)
+        axes(handles.match0); cla; set(handles.match0_name,'String','1st Closest Match');
+        axes(handles.match1); cla; set(handles.match1_name,'String','2nd Closest Match');
+        axes(handles.match2); cla; set(handles.match2_name,'String','3rd Closest Match');
+        axes(handles.match3); cla; set(handles.match3_name,'String','4th Closest Match');
+        axes(handles.match4); cla; set(handles.match4_name,'String','5th Closest Match');
+ 
+        
+        function preload_models
+    
+    
+    function scan_descriptor_db(handles)
         
         global ModelDescriptors;
         global ModelSearchColor;
@@ -297,7 +323,7 @@ function b = check_create_descriptor_db()
             
             
             % Update Name-box of UI
-            update_str = sprintf('[%d/%d] %s',idx,(N-1),model_names{idx});
+            update_str = sprintf('[%d/%d] %s',idx,N,model_names{idx});
             set(handles.candidate_name,'String',update_str);
             
             
@@ -315,7 +341,7 @@ function b = check_create_descriptor_db()
             data                = load(sprintf('%s/%s',get_descriptor_dir(),desc_files(idx).name));
             descriptors{idx}    = data.D;
             [~,d]               = knnsearch(descriptors{idx}.',ModelDescriptors.');
-            grades(idx)         = sum(d);
+            grades(idx)         = mean(d);
             
             
             % Plot query vs. db histograms
@@ -333,23 +359,18 @@ function b = check_create_descriptor_db()
         % Sort grades
         [~,opt_idx] = sort(grades);
         
-        
-        % Resolve path to optimal model match
-        match_path  = model_names{opt_idx(1)};
-
-        
         % Display the closest database result
         axes(handles.match0); cla; meshview(models{opt_idx(1)},'FaceColor',ModelSearchColor); set(handles.match0_name,'String',model_names{opt_idx(1)});
         axes(handles.match1); cla; meshview(models{opt_idx(2)},'FaceColor',ModelSearchColor); set(handles.match1_name,'String',model_names{opt_idx(2)});
         axes(handles.match2); cla; meshview(models{opt_idx(3)},'FaceColor',ModelSearchColor); set(handles.match2_name,'String',model_names{opt_idx(3)});
-        axes(handles.match3); cla; meshview(models{opt_idx(4)},'FaceColor',ModelSearchColor); set(handles.match0_name,'String',model_names{opt_idx(4)});
-        axes(handles.match4); cla; meshview(models{opt_idx(5)},'FaceColor',ModelSearchColor); set(handles.match0_name,'String',model_names{opt_idx(5)});
+        axes(handles.match3); cla; meshview(models{opt_idx(4)},'FaceColor',ModelSearchColor); set(handles.match3_name,'String',model_names{opt_idx(4)});
+        axes(handles.match4); cla; meshview(models{opt_idx(5)},'FaceColor',ModelSearchColor); set(handles.match4_name,'String',model_names{opt_idx(5)});
 
-        
-        %{
+        % Repost the model + hist
+        axes(handles.model_view); cla
+        meshview(ModelInput,    'FaceColor',ModelInputColor);
+
+        % Plot query vs. db histograms
         axes(handles.hist_view); cla
-        hold on
-        plot(descriptors{opt_idx},  'Color',ModelSearchColor);
-        plot(ModelDescriptors,      'Color',ModelInputColor);
-        hold off
-        %}
+        plot(ModelDescriptors,  'Color',ModelInputColor);
+
