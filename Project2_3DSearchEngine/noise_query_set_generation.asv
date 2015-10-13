@@ -3,7 +3,7 @@ clear;
 clc
 input_dir  = 'models';
 output_dir = 'noisy_models'; 
-noise_level= 0.05;
+noise_level= 0.005;
 
 
 mkdir(output_dir);
