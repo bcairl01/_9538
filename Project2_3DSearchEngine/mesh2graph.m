@@ -1,4 +1,4 @@
-function [G,D,T] = mesh2graph(M,p)
+function [G,D] = mesh2graph(M,p)
     D = ones( size(M.V,2) )*inf;
     G = zeros( size(M.V,2));
     
@@ -17,7 +17,6 @@ function [G,D,T] = mesh2graph(M,p)
     end
     
     ninf    = (D~=inf);
-    T       = max(D(ninf),[],1);
-    G(ninf) = 2*T - D(ninf);
+    G(ninf) = D(ninf);
     G       = sparse(G);
 end

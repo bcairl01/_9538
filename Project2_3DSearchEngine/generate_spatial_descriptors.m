@@ -1,6 +1,6 @@
 function [D,IDX] = generate_spatial_descriptors(mesh,percent,dmin,dmax,dres,type,varargin)
 
-    [G,~,T] = mesh2graph(mesh,2);
+    G       = mesh2graph(mesh,2);
     N       = ceil(size(mesh.V,2)*percent);
     IDX     = ceil(linspace(1,size(mesh.V,2),N));
     D       = zeros(ceil((dmax-dmin)/dres),N);
@@ -25,12 +25,11 @@ function [D,IDX] = generate_spatial_descriptors(mesh,percent,dmin,dmax,dres,type
     for idx = IDX
         D_itr = D_itr + 1;
         if      mode==1
-            [d,p,~] = graphshortestpath(G,idx);
-            dd      = 2*T.*get_path_counts(p) - d;
+            [d,~,~] = graphshortestpath(G,idx);
         elseif  mode==2
-            dd      = nodedistances(mesh,idx);
+            d       = nodedistances(mesh,idx);
         end
-        tmp         = bin_values(dd,dmin,dmax,dres);
+        tmp         = bin_values(d,dmin,dmax,dres);
         D(:,D_itr)  = tmp/size(G,2);
         pcomp       = idx/size(G,2);
         if show_wb
@@ -47,12 +46,4 @@ end
 function d = nodedistances(M,idx)
     diff = repmat(M.V(:,idx),1,size(M.V,2)) - M.V;
     d    = sum(diff.^2,1);
-end
-
-
-function c = get_path_counts(p)
-    c = zeros(1,numel(p));
-    for idx = 1:numel(p)
-        c(idx) = numel(p{idx}) - 1;
-    end
 end
