@@ -1,0 +1,27 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx}
+\usepackage{float}
+
+\setlength{\parskip}{5mm}
+\renewcommand{\baselinestretch}{1.0}
+
+\title{Project Report 2 : 3D Shape Search Engine}
+\author{Brian R. Cairl}
+\begin{document}
+\maketitle
+\pagebreak
+
+\newcommand{\ith}{i$^{th}$}
+\newcommand{\st}{\hspace{0.5mm}:\hspace{0.5mm}}
+\newcommand{\fa}{\hspace{0.5mm}\forall\hspace{0.5mm}}
+
+
+\section*{Introduction}
+	
+	\noindent
+	This report details the design and testing of a 3D shape search engine using both Geodesic (GD) and Euclidean distance (ED). The contents of this report will include a description of the code written to generate both GD and ED descriptors, given a 3D shape (mesh) input; a description of how noise and distortion were added to a set of 3D models (TOSCA data set); a description of code generated to facilitate as 3D search-engine back-end and a corresponding GUI front-end for 3D shape retrieval; and an experimental comparison between GD and ED based searches when clean, distorted and incomplete models are presented to the aforementioned search engine. Additionally, a turtorial will be provided as to how to run the search-engine GUI.
+
+	\bibliography{refs}{}
+	\bibliographystyle{plain}
+
+\end{document}

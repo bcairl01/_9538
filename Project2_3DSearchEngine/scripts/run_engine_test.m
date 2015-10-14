@@ -1,10 +1,25 @@
-% Test Clean + Clean
+% Generates PR data for search-engine back-end for all query sets
 clear;
 clc;
 
+% Number of results to retrieve
 n_retrieve                      = 5;
+
+% Descriptor types to test
 descriptor_type                 = {'GD','ED'};
-query_dir_list                  = {'models','low_noise_models','med_noise_models','high_noise_models'};
+
+% Model directories to sweep through
+query_dir_list                  = {...
+    'models',...
+    'low_noise_models',...
+    'med_noise_models',...
+    'high_noise_models',...
+    'low_incomplete_models',...
+    'med_incomplete_models',...
+    'high_incomplete_models'...
+};
+
+% Where to put the results
 result_output_dir               = 'match_results';
 
 for qdx = 1:numel(query_dir_list)
@@ -27,7 +42,8 @@ for qdx = 1:numel(query_dir_list)
         class_correct       = 0;
 
         for jdx = 1:n
-
+            
+            % Generate a Descriptor for the current query model
             D = generate_spatial_descriptors( ...
                 query_models{jdx,1},    ...
                 conf(1)/2,              ...
