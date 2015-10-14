@@ -12,14 +12,111 @@
 \pagebreak
 
 \newcommand{\ith}{i$^{th}$}
+\newcommand{\jth}{j$^{th}$}
 \newcommand{\st}{\hspace{0.5mm}:\hspace{0.5mm}}
 \newcommand{\fa}{\hspace{0.5mm}\forall\hspace{0.5mm}}
 
 
 \section*{Introduction}
+
+	\noindent	
+	This report details the design and testing of a 3D shape search engine using both Geodesic (GD) and Euclidean distance (ED). The contents of this report will include a description of the code written to generate both GD and ED descriptors, given a 3D shape (mesh) input; a description of how noise and distortion were added to a set of 3D models (TOSCA data set); a description of code generated to facilitate as 3D search-engine back-end and a corresponding GUI front-end for 3D shape retrieval; and an experimental comparison between GD and ED based searches when clean, distorted and incomplete models are presented to the aforementioned search engine. Additionally, a tutorial will be provided as to how to run the search-engine GUI.
+
+
+\section*{GD and ED Descriptors}
 	
 	\noindent
-	This report details the design and testing of a 3D shape search engine using both Geodesic (GD) and Euclidean distance (ED). The contents of this report will include a description of the code written to generate both GD and ED descriptors, given a 3D shape (mesh) input; a description of how noise and distortion were added to a set of 3D models (TOSCA data set); a description of code generated to facilitate as 3D search-engine back-end and a corresponding GUI front-end for 3D shape retrieval; and an experimental comparison between GD and ED based searches when clean, distorted and incomplete models are presented to the aforementioned search engine. Additionally, a turtorial will be provided as to how to run the search-engine GUI.
+	Geodesic-distance (GD) and Euclidean Distance (ED) ED descriptors are histogram-based 3D descriptors used in the identification of 3D shapes. Moreover, these descriptors are utilized to represent a 3D shape as high-dimensional feature vector. This section will describe the MATLAB implementation of a GD/ED descriptor generator used throughout this project.
+
+	\noindent
+	The descriptor generator function \emph{generate\_spatial\_descriptor(...)} (see associated code-base) is used to generate both GD and ED descriptors. The function takes six arguments: an input mesh; a percentage argument, corresponding to the percentage of mesh vertices to consider during descriptor generation; bin (histogram) arguments, which parameterize the feature vector dimensionality; and a feature type (ED or GD). 
+
+	\noindent
+	If the ED feature type is selected, some percentage of the input mesh vertices are selected, and the euclidean distance from these points to all points in the mesh are calculated by an internal helper function, \emph{nodedistances}. Onces these distances are calculated, they are counted into a histogram with a fixed binning resolution specified by the parameter \emph{dres}. Histogram generation is performed using the function \emph{bin_values(...)}. Distance values, $D$, corresponding to each \ith sample vertex are counted into each \jth bin of each \ith histogram, $H_{j}^{i}$ as follows:
+
+	\begin{equation}
+		H_{j}^{i} = 
+			\{ 
+			\sum_{d \in D \text{ and } d < \text{dmax}} u(d) : 
+				u(d) = 1  
+				\text{ if } 
+					(\text{dmin} + \text{dres}*j) < d < (\text{dmin} + \text{dres}*(j+1)) 
+				\text{ else }
+				u(d) = 0;
+			\}
+	\end{equation}
+	where $dmin$ and $dmax$ red the minimum and maximum binning distances, respectively.
+
+	Histograms generated for each sample point are summed (in an element wise fashion) and then normalized by the number of vertices in the input mesh to form the final feature vector, $x\in\Re^{N}$, by:
+
+	\begin{equation}
+		x = \frac{1}{n_{\text{vectices}}}\sum_{i} H^{i}
+	\end{equation}
+	The dimensionality of $x$, $N$, is determined by :
+	\begin{equation}
+		\text{ceil}\right(\frac{\text{dmax}-\text{dmin})}{\text{dres}} \left)
+	\end{equation}
+
+	\noident
+	If the GD feature type is selected, distances are calculated from each sample point to every other point in the mesh using a geodesic distance calculation. The geodesic distance to each point is calculated as the shortest path between points using Dijkstra's algorithm. To achieve this, the built-in MATLAB function \emph{graphshortestpath} is utilized, which takes (as an input) a weighted adjacency graph represented as a sparse matrix. The function returns the vertexes traveled to while traveling to all endpoints, as well as the total distances of said travels. This distance it the geodesic distance over the surface of the mesh between a specified starting point and all other vertexes. 
+
+	\noindent
+	To uses this function, the original mesh input must be converted to a sparse weighted adjacency-matrix. The function \emph{mesh2graph} was written to generate such an adjacency matrix from a mesh input. The function calculates the distance between all connected nodes and returns a sparse matrix whose elements represent edge weights between vertices. In this case, edge weights are the actual euclidean distances between connected vertices. The final binning procedure used to generate the feature vector, $x$, is the same as stated above.
+
+	\noindent
+	It is important to note that throughout this implementation, meshes have been represented as structures with two properties, \emph{V} and \emph{E}, which represent a collection of vertexes in $\Re^3$ and $3\times1$ groups of integers representing triangular groups of connected vertexes, respectively.
+
+
+	\subsection*{Dissimilarity measure for shape matching}
+
+		\noindent
+		During shape-matching process, the dissimilarity between shapes is determined by the distance between associated feature vectors. For a pair of meshes $A$ and $B$ with associated feature vectors $x^{A}$ and $x^{B}$, shape dissimilarity, $d_{AB}$ is calculated by:
+
+		\begin{equation}
+			d_{AB} = \sqrt{\sum_{i=0}^{N-1}\left( x^{A}_{i} - x^{A}_{i} \right)^{2}}
+			\label{eq::shape_distance}
+		\end{equation} 
+
+
+
+\section*{Noise and Mesh Distortion simulation}
+	
+	\noindent
+	For the purpose of testing the robustness of the ED and GD descriptors, and in-turn the 3D shape search-engine, the provided (reduced) TOSCA dataset is augmented with noise data sets and incomplete-model data sets.
+
+	\subsection*{Noisy Datasets}
+
+		\noindent
+		Noisy datasets are generated by adding Gaussian noise to each clean model in the original database. Each original mesh is modified using the provided function \emph{addGaussianNoise} for three levels of Gaussian noise. Therefore, three (low, med, high) noisy data models are generated for each clean model. Noise levels are chosen to be 0.001, 0.008 and 0.015 for the low, medium and high noise models respectively.
+
+
+	\subsection*{Incomplete Datasets}
+
+		\noindent
+		Three incomplete models are generated for each clean model by removing incrementally larger portions of each original mesh using the program MeshLab. Namely, low, medium, and highly effected models are generated by the aforementioned process. Any resulting holes in the effect mesh are filled using an hole-filling algorithm built into the MeshLab software.
+ 
+
+
+\section*{The 3D Shape Search Engine (and GUI)}
+
+
+
+
+	\subsection*{How to run the GUI}
+
+
+
+\section*{Search Matching results}
+
+	\noindent
+	A script, \emph{run\_engine\_test}, has been generated to emulate to back-end processes of the search engine GUI for the sake of automated testing and query result generation.
+
+
+
+
+\section*{Concluding Remarks}
+
+
 
 	\bibliography{refs}{}
 	\bibliographystyle{plain}

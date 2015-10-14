@@ -1,3 +1,21 @@
+% [D,IDX] = generate_spatial_descriptors(mesh,percent,dmin,dmax,dres,type,...)
+%
+% Generates GD and ED descriptors
+%
+% Inputs:
+%   mesh        An input mesh
+%   percent     Percent of the mesh''s vertices to used in descriptor generation
+%   dmin        Minimum binning distance
+%   dmax        Maximum binning distance
+%   dres        Binning resolution (step)
+%   type        {ED|GD} descriptor type
+%
+% Output:
+%   D           (ceil((dmax-dmin)/dres) - 1) by 1 descriptor vector.
+%   IDX         selected vectices for feature generation
+% 
+%
+
 function [D,IDX] = generate_spatial_descriptors(mesh,percent,dmin,dmax,dres,type,varargin)
 
     G       = mesh2graph(mesh,2);

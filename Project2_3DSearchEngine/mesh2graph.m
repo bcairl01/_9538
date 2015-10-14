@@ -1,3 +1,19 @@
+% [G,D] = mesh2graph(M,p)
+%  
+% Generates a weighted adjacency matrix from a mesh structures with elements
+%
+%   M.V = vertices  3 x N
+%   M.E = edges     3 x M
+$
+$ Inputs:
+%   M   mesh
+%   p   Lp norm order
+$
+$ Outputs:
+%   G   sparse adjacency matrix
+%   D   distance matrix
+
+
 function [G,D] = mesh2graph(M,p)
     D = ones( size(M.V,2) )*inf;
     G = zeros( size(M.V,2));
