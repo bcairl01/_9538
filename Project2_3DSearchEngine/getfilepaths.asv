@@ -1,0 +1,6 @@
+function paths = getfilepaths(folder)
+    directory       = dir(folder);
+    directory(1:2)  = [];
+    
+    for idx = 1
+end

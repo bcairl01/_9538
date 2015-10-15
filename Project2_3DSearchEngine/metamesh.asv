@@ -1,0 +1,46 @@
+% Mesh with extended information
+% *** NON-GENERIC
+classdef metamesh
+    
+    properties
+        M           = [];   % source mesh
+        ED          = [];   % ED-descriptor
+        GD          = [];   % GD-descriptor
+        CD          = [];   % CD-descriptor (custom)
+        name        = '';   % exact name
+        class       = '';   % class name
+        path        = '';   % source path
+    end
+    
+    methods
+        
+        function mmesh = metamesh(varargin)
+            if nargin>0
+                
+                % Get the source mesh
+                if      strcmpi(varargin{1},'FILE')
+                    mmesh.path  = varargin{2};
+                    mmesh.M     = meshread(varargin{2});
+                elseif  strcmpi(varargin{1},'MESH')
+                    mmesh.M     = varargin{2};
+                else
+                    error(['Unrecognized option : ',varargin{1}]);
+                end
+                varargin(1:2) = [];
+                
+                % Generate ED descriptor
+                create_EDdescriptor(mmesh.M,varargin{:});
+                
+                % Generate GD descriptor
+                create_GDdescriptor(mmesh.M,varargin{:});
+                
+                % Generate CD descriptor
+                %create_CDdescriptor(mmesh.M,varargin{:});
+                
+                % Get na
+            end
+        end
+        
+    end
+    
+end

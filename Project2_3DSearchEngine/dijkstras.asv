@@ -1,0 +1,37 @@
+% [L,p] = dijkstras(G,b)
+%
+% Computes the shortest path from a starting location to all endpoints
+
+function [L,p] = dijkstras(G,b)
+    
+    N       = size(G,2);
+    O       = ones(1,N);
+    L       = ones(1,N)*inf;
+    p       = zeros(1,N);
+    
+    % Set initial node to disttance of 0
+    L(b)    = 0;
+    V       = b;
+    
+    while ~isempty(V)
+        
+        % get neighbors
+        edges       = find( (G(V(1),:)~=inf ) & O );
+        Lp          = L(V(1)) + G(V(1),edges);
+        qualified   = (Lp < L(edges));
+        p_edges     = edges(qualified);
+        L(p_edges)  = Lp(qualified);
+        
+        % add to open list
+        V           = [V,p_edges]; %#ok<AGROW>
+        
+        if nargout==2
+            p(p_edges) = V(1);
+        end
+        
+        % set as visited
+        O(V(1))     = 0;
+        V(1)        = [];
+        
+    end
+end

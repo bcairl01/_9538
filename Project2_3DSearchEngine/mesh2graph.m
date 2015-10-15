@@ -1,38 +1,28 @@
-% [G,D] = mesh2graph(M,p)
+% [G,D] = MESH2GRAPH(M,p)
 %  
-% Generates a weighted adjacency matrix from a mesh structures with elements
+% Generates an N x N weighted adjacency matrix from a mesh structures with
+% elements, where N is the number of vertexs in mesh M
 %
-%   M.V = vertices  3 x N
-%   M.E = edges     3 x M
-$
-$ Inputs:
+% Inputs:
 %   M   mesh
 %   p   Lp norm order
-$
-$ Outputs:
-%   G   sparse adjacency matrix
-%   D   distance matrix
+%
+% Outputs:
+%   G   adjacency matrix with edge weights (Lp distances)
+%
+function G = mesh2graph(M,p)
 
-
-function [G,D] = mesh2graph(M,p)
-    D = ones( size(M.V,2) )*inf;
-    G = zeros( size(M.V,2));
-    
+    G = ones( size(M.V,2) )*inf; 
     for idx = 1:size(M.E,2)
-        for jdx = 1:3
-            a = M.E(jdx,idx);
-            for kdx = 1:3
-                if  kdx~=jdx
-                    b = M.E(kdx,idx);
-                    d = norm( M.V(:,a)- M.V(:,b), p);
-                    D(a,b) = d;
-                    D(b,a) = d;
-                end
+        edges = [M.E(2:end,idx).',M.E(2,idx)];
+        for jdx = 2:M.E(1)
+            a = edges(1,jdx);
+            b = edges(1,jdx-1);
+            if  G(a,b)==inf
+                d       = norm( M.V(:,a) - M.V(:,b), p );
+                G(a,b)  = d;
+                G(b,a)  = d;
             end
         end
     end
-    
-    ninf    = (D~=inf);
-    G(ninf) = D(ninf);
-    G       = sparse(G);
 end
