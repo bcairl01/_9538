@@ -11,10 +11,10 @@
 function d  = create_CDdescriptor(M,varargin)
     
     % Defaults
-    p       = 0.01;
+    p       = 0.1;
     d_min   = -1;
     d_max   =  1;
-    d_res   = 0.01;
+    d_res   = 0.001;
     
     % Process variable arguments
     while numel(varargin)
@@ -41,8 +41,7 @@ function P = curvature(M,p)
     L     = size(M.E,2);
     n     = ceil(L*p);
     N     = ceil(linspace(1,L,n));
-    P     = zeros(n,L);
     PN    = faces2normals(M);
-    NM    = PN(4:6,:).'*PN(4:6,:);
+    NM    = (PN(4:6,:).'*PN(4:6,:));
     P     = NM(N,:);
 end

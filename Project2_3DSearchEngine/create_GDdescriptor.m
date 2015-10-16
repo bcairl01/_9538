@@ -11,9 +11,9 @@
 function d  = create_GDdescriptor(M,varargin)
     
     % Defaults
-    p       = 0.005;
+    p       = 0.1;
     d_min   = 0;
-    d_max   = 1000;
+    d_max   = 600;
     d_res   = 1;
     
     % Process variable arguments

@@ -51,6 +51,7 @@ classdef metamesh
             if numel(varargin)
                if strcmpi(varargin{1},'HANDLE')
                    axes(varargin{2})
+                   varargin(1:2) = [];
                end
             end
             meshview(mmesh.M,varargin{:});
@@ -64,6 +65,23 @@ classdef metamesh
             d(3)    = norm(mmesh.CD - other.CD);
         end
         
+        
+        
+        function plot(mmesh,varargin)
+            subplot(3,1,1); plot(mmesh.ED,varargin{:})
+            subplot(3,1,2); plot(mmesh.GD,varargin{:})
+            subplot(3,1,3); plot(mmesh.CD,varargin{:})
+        end
+ 
+        
+        function cplot(mmesh,other)
+            N = transpose(1:numel(mmesh.ED));
+            subplot(3,1,1); plot(N,mmesh.ED,'b',N,other.ED,'g')
+            N = transpose(1:numel(mmesh.GD));
+            subplot(3,1,2); plot(N,mmesh.GD,'b',N,other.GD,'g')
+            N = transpose(1:numel(mmesh.CD));
+            subplot(3,1,3); plot(N,mmesh.CD,'b',N,other.CD,'g')
+        end
     end
     
 end
