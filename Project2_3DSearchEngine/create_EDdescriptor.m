@@ -11,10 +11,10 @@
 function d  = create_EDdescriptor(M,varargin)
     
     % Defaults
-    p       = 0.1;
+    p       = 0.01;
     d_min   = 0;
-    d_max   = 600;
-    d_res   = 1;
+    d_max   = 300;
+    d_res   = 0.1;
     
     % Process variable arguments
     while numel(varargin)
@@ -50,13 +50,13 @@ end
 %           vertices in N and M=N*p is the number of sampled points.
 %
 function P = euclidean(M,p)
-    
+  
     L     = size(M.V,2);
     n     = ceil(L*p);
     N     = ceil(linspace(1,L,n));
     P     = zeros(n,L);
 
-    for ndx = 1:n
+    parfor ndx = 1:n
         P(ndx,:) = euclidean_row(M,N(ndx));
     end
 end

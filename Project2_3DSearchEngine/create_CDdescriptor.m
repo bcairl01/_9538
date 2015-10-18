@@ -11,7 +11,7 @@
 function d  = create_CDdescriptor(M,varargin)
     
     % Defaults
-    p       = 0.1;
+    p       = 0.01;
     d_min   = -1;
     d_max   =  1;
     d_res   = 0.001;

@@ -1,0 +1,48 @@
+% Generate side-by-side plots of noisy and effect meshes
+clear;
+clc;
+close all;
+
+figure(1)
+m1_clean = metamesh('LOAD','meta_queries/cat0');
+m1_noise = metamesh('LOAD','meta_queries/cat0_noise2');
+
+subplot(1,2,1);
+show(m1_clean);
+axis(70*[-1,1,-1,1,0,2])
+view([-45,45])
+title('Clean cat0 model')
+
+subplot(1,2,2);
+show(m1_noise);
+axis(70*[-1,1,-1,1,0,2])
+view([-45,45])
+title('Noisy cat0 model')
+
+print('plots/noisy_clean','-dpng','-r300')
+
+%%
+
+clear;
+clc;
+close all;
+
+figure(1)
+m1_clean = metamesh('LOAD','meta_queries/cat0');
+m1_incomp = metamesh('LOAD','meta_queries/cat0_inc2');
+
+subplot(1,2,1);
+show(m1_clean);
+axis(70*[-1,1,-1,1,0,2])
+view([-45,45])
+title('Clean cat0 model')
+
+subplot(1,2,2);
+show(m1_incomp);
+axis(70*[-1,1,-1,1,0,2])
+view([-45,45])
+title('Incomplete cat0 model')
+
+print('plots/incomp_clean','-dpng','-r300')
+
+

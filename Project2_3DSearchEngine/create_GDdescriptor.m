@@ -11,10 +11,10 @@
 function d  = create_GDdescriptor(M,varargin)
     
     % Defaults
-    p       = 0.1;
+    p       = 0.01;
     d_min   = 0;
-    d_max   = 600;
-    d_res   = 1;
+    d_max   = 300;
+    d_res   = 0.1;
     
     % Process variable arguments
     while numel(varargin)
@@ -57,7 +57,7 @@ function P = geodesic(M,p)
     P     = zeros(n,L);
     G     = mesh2graph(M,2);
     
-    for ndx = 1:n
+    parfor ndx = 1:n
         P(ndx,:) = dijkstras(G,N(ndx));
     end
 end

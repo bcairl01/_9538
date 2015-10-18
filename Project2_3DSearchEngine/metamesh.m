@@ -41,7 +41,7 @@ classdef metamesh
                 mmesh.GD = create_GDdescriptor(mmesh.M,varargin{:});
                 
                 % Generate CD descriptor
-                mmesh.CD = create_CDdescriptor(mmesh.M,varargin{:});
+                mmesh.CD = [];%create_CDdescriptor(mmesh.M,varargin{:});
             end
         end
         
