@@ -10,7 +10,7 @@ src_folder = 'queries';
 
 % Meshs with class/descriptor data and some nice methods
 dst_folder = sprintf('meta_%s',src_folder);
-
+%%
 
 % Generate the output directory, if it does not exists
 mkdir(dst_folder);
@@ -38,7 +38,7 @@ for idx = 1:N_to_proc
     save(dst_path,'mmesh');
 end
 
-% Model query==models to meta_models
+%% Model query==models to meta_models
 
 % Model database
 db_folder = 'models';

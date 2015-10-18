@@ -1,4 +1,4 @@
-function [matches,ranked] = search_engine(query_name,model_folder,type,varargin)
+function [matches,ranked,query] = search_engine(query_name,model_folder,type,varargin)
     
  
     % Some extra animation stuff to work with a gui

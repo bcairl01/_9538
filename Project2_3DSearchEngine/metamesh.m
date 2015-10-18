@@ -75,12 +75,19 @@ classdef metamesh
  
         
         function cplot(mmesh,other)
+            D = dist(mmesh,other);
             N = transpose(1:numel(mmesh.ED));
-            subplot(3,1,1); plot(N,mmesh.ED,'b',N,other.ED,'g')
+            subplot(3,1,1); 
+                plot(N,mmesh.ED,'b',N,other.ED,'g')
+                ylabel(sprintf('Dist : %f',D(1)))
             N = transpose(1:numel(mmesh.GD));
-            subplot(3,1,2); plot(N,mmesh.GD,'b',N,other.GD,'g')
+            subplot(3,1,2); 
+                plot(N,mmesh.GD,'b',N,other.GD,'g')
+                ylabel(sprintf('Dist : %f',D(2)))
             N = transpose(1:numel(mmesh.CD));
-            subplot(3,1,3); plot(N,mmesh.CD,'b',N,other.CD,'g')
+            subplot(3,1,3); 
+                plot(N,mmesh.CD,'b',N,other.CD,'g')
+                ylabel(sprintf('Dist : %f',D(3)))
         end
     end
     
