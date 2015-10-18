@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.10.17)  18 OCT 2015 11:06
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2015.10.17)  18 OCT 2015 15:03
 entering extended mode
 **report.tex
 (report.tex
@@ -148,65 +148,128 @@ LaTeX Font Info:    ... okay on input line 10.
 ) [1
 
 {C:/Users/Brian/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
-Overfull \hbox (15.42104pt too wide) in paragraph at lines 31--33
+Overfull \hbox (15.42104pt too wide) in paragraph at lines 32--34
 \OT1/cmr/m/n/12 Geodesic-distance (GD) and Eu-clidean Dis-tance (ED) de-scrip-t
 ors are histogram-
  []
 
 [2]
-Overfull \hbox (53.72417pt too wide) detected at line 43
-\OML/cmm/m/it/12 H[] \OT1/cmr/m/n/12 = [] \OML/cmm/m/it/12 u\OT1/cmr/m/n/12 (\O
-ML/cmm/m/it/12 d\OT1/cmr/m/n/12 ) : \OML/cmm/m/it/12 u\OT1/cmr/m/n/12 (\OML/cmm
-/m/it/12 d\OT1/cmr/m/n/12 ) = []
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 58.
+ ("C:\Program Files\MiKTeX 2.9\tex\latex\base\omscmr.fd"
+File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 58.
+ [3] [4]
+Overfull \hbox (4.81804pt too wide) in paragraph at lines 83--85
+\OT1/cmr/m/n/12 nor-mal com-po-nent of each i$[]$ face is stacked into a ma-tri
+x $\OML/cmm/m/it/12 U \OT1/cmr/m/n/12 = [\OML/cmm/m/it/12 u[]; u[]; :::; u[]\OT
+1/cmr/m/n/12 ] \OMS/cmsy/m/n/12 2$
  []
 
-[3] [4] <plots/noisy_clean.png, id=24, 578.16pt x 433.62pt>
+[5] <plots/noisy_clean.png, id=29, 578.16pt x 433.62pt>
 File: plots/noisy_clean.png Graphic file (type png)
 
 <use plots/noisy_clean.png>
-Package pdftex.def Info: plots/noisy_clean.png used on input line 85.
+Package pdftex.def Info: plots/noisy_clean.png used on input line 116.
 (pdftex.def)             Requested size: 390.0pt x 292.4956pt.
 
-Overfull \hbox (6.79999pt too wide) in paragraph at lines 85--86
+Overfull \hbox (6.79999pt too wide) in paragraph at lines 116--117
  [][] 
  []
 
-[5 <./plots/noisy_clean.png (PNG copy)>]
-<plots/incomp_clean.png, id=28, 578.16pt x 433.62pt>
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<plots/incomp_clean.png, id=30, 578.16pt x 433.62pt>
 File: plots/incomp_clean.png Graphic file (type png)
 
 <use plots/incomp_clean.png>
-Package pdftex.def Info: plots/incomp_clean.png used on input line 98.
+Package pdftex.def Info: plots/incomp_clean.png used on input line 129.
 (pdftex.def)             Requested size: 390.0pt x 292.4956pt.
 
-Overfull \hbox (6.79999pt too wide) in paragraph at lines 98--99
+Overfull \hbox (6.79999pt too wide) in paragraph at lines 129--130
  [][] 
  []
 
-[6 <./plots/incomp_clean.png (PNG copy)>]
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[6] [7 <./plots/noisy_clean.png (PNG copy)>] [8 <./plots/incomp_clean.png (PNG 
+copy)>] <tutorial/select.png, id=41, 342.68025pt x 92.7465pt>
+File: tutorial/select.png Graphic file (type png)
+
+<use tutorial/select.png>
+Package pdftex.def Info: tutorial/select.png used on input line 151.
+(pdftex.def)             Requested size: 390.0pt x 105.55945pt.
+
+Overfull \hbox (6.79999pt too wide) in paragraph at lines 151--152
+ [][] 
+ []
+
+<tutorial/search.png, id=43, 342.68025pt x 92.7465pt>
+File: tutorial/search.png Graphic file (type png)
+
+<use tutorial/search.png>
+Package pdftex.def Info: tutorial/search.png used on input line 161.
+(pdftex.def)             Requested size: 390.0pt x 105.55945pt.
+
+Overfull \hbox (6.79999pt too wide) in paragraph at lines 161--162
+ [][] 
+ []
+
+<tutorial/match.png, id=44, 346.29375pt x 416.757pt>
+File: tutorial/match.png Graphic file (type png)
+ <use tutorial/match.png>
+Package pdftex.def Info: tutorial/match.png used on input line 172.
+(pdftex.def)             Requested size: 259.71967pt x 312.56699pt.
+
+<tutorial/full.png, id=45, 612.48825pt x 508.90125pt>
+File: tutorial/full.png Graphic file (type png)
+ <use tutorial/full.png>
+Package pdftex.def Info: tutorial/full.png used on input line 182.
+(pdftex.def)             Requested size: 459.36507pt x 381.675pt.
+
+Overfull \hbox (76.16505pt too wide) in paragraph at lines 182--183
+ [][] 
+ []
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[9 <./tutorial/select.png> <./tutorial/search.png>] [10 <./tutorial/match.png>]
+
+Overfull \vbox (19.0874pt too high) has occurred while \output is active []
+
+
+[11 <./tutorial/full.png>]
 No file report.bbl.
-[7] (report.aux) ) 
+[12] (report.aux) ) 
 Here is how much of TeX's memory you used:
- 1810 strings out of 493673
- 22441 string characters out of 3143959
- 84096 words of memory out of 3000000
- 5174 multiletter control sequences out of 15000+200000
+ 1853 strings out of 493673
+ 23190 string characters out of 3143959
+ 84130 words of memory out of 3000000
+ 5209 multiletter control sequences out of 15000+200000
  9973 words of font info for 36 fonts, out of 3000000 for 9000
  1025 hyphenation exceptions out of 8191
- 27i,9n,20p,1019b,231s stack positions out of 5000i,500n,10000p,200000b,50000s
-<C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/c
-mbx12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pf
-b><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Pr
-ogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Program Fil
-es/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX
- 2.9/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Program Files/MiKTeX 2.9/font
-s/type1/public/amsfonts/cm/cmr8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/pu
-blic/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/ams
-fonts/cm/cmsy8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/
-cmti12.pfb>
-Output written on report.pdf (7 pages, 265691 bytes).
+ 27i,9n,20p,1230b,231s stack positions out of 5000i,500n,10000p,200000b,50000s
+<C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/
+cmbx12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.p
+fb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/P
+rogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Program Fi
+les/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Program Files/MiKTe
+X 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX 2.9/fon
+ts/type1/public/amsfonts/cm/cmr17.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/
+public/amsfonts/cm/cmr6.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/ams
+fonts/cm/cmr8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/c
+msy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb
+><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti12.pfb>
+Output written on report.pdf (12 pages, 446535 bytes).
 PDF statistics:
- 68 PDF objects out of 1000 (max. 8388607)
+ 100 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 11 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 31 words of extra memory for PDF output out of 10000 (max. 10000000)
 
